@@ -17,6 +17,7 @@ module.exports = function(app) {
     console.log("Scrape API");
     var results = [];
     var count = 0;
+    // res.render("scrappednews")
     axios.get("https://www.insauga.com/news").then(function(response) {
       console.log("got axios back");
       var $ = cheerio.load(response.data);
@@ -39,27 +40,18 @@ module.exports = function(app) {
         count++;
         if (count == 7) {
           console.log("Hit 7");
-          db.News.create(results)
-            .then(insertedData => {
-              console.log(`Inserted ${insertedData.length} rows`);
-              db.News.find({})
-                .then(selectedData => {
-                  if (selectedData.length > 0) {
-                    console.log("Selected Data Present" + selectedData.length);
-                    // res.status(201).render("newstable", { newsItem: selectedData });
-                    // res.render("nonews");
-                    res.json("Hello")
-
-                  } else {
-                    console.log("No Data selected");
-                    res.render("nonews");
-                  }
-                })
-                .catch(error => console.error(error));
-            })
-            .catch(error => console.error(error));
+          // res.json(results)
+          res.json(results);
+          // db.News.create(results)
+          //   .then(insertedData => {
+          //     console.log(`Inserted ${insertedData.length} rows`);
+          //     res.json(insertedData)
+          //   })
+          //   .catch(error => console.error(error));
         }
       });
     });
+    res.sendStatus(200);
   });
+
 };
